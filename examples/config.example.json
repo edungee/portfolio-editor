@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "mode": "private-dry-run",
+  "repository": "/absolute/path/to/your-portfolio",
+  "stateDirectory": "/absolute/private/portfolio-editor-state",
+  "policyVersion": "my-policy-v1",
+  "projects": ["sample-project"],
+  "sources": [{"id": "my-approved-notes", "project": "sample-project", "kind": "document", "locator": "REPLACE_IN_PRIVATE_CONFIG", "scope": "An explicitly approved document"}]
+}
