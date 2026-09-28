@@ -2,28 +2,41 @@
 
 An agent skill that turns approved work evidence into private portfolio change proposals, readable review summaries and combined site previews.
 
-**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. The scripted adapter handles Markdown project milestones; a host-managed editorial workflow covers new projects, speaking, writing and other repository-backed surfaces. Cross-platform live integration has not been validated.
+**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. The scripted adapter handles Markdown project milestones; a host-managed editorial workflow covers new projects, speaking, writing and other repository-backed surfaces. Only the Codex install path has been validated end to end; other hosts are documented but unverified (see [validation](references/validation.md)).
+
+## What works where
+
+The skill checks what the current agent can do and picks a mode ([details](references/modes.md)):
+
+| Mode | Needs | You get |
+| --- | --- | --- |
+| **Full** | Shell, Node.js 22+, Git, a local checkout of your portfolio | Helper-validated proposals, a combined site preview, optional draft PR |
+| **Helper** | Shell, Node.js 22+, Git (for example a chat app's code sandbox) | Helper-validated proposals and review files for an uploaded snapshot; no preview or PR |
+| **Review-only** | Read access to your approved sources | Batch JSON, proposed milestone YAML and a private review, labelled as not validated by the helper |
+
+Coding agents (Codex, Claude Code, Cursor) usually run in Full mode. Chat apps (Claude.ai, ChatGPT) usually run in Helper or Review-only mode. No mode merges, deploys or emails anything.
 
 ## Install the skill
 
-Requires Node.js 22 or later, npm, Git and tar. In the project where you want to use the skill:
+The helpers have **no npm dependencies** (the YAML parser is bundled), so there is no install step beyond copying the skill.
+
+**Coding agents with the skills CLI** (Codex was tested; others unverified):
 
 ```sh
-npx skills add edungee/portfolio-editor --skill portfolio-editor
+npx skills add edungee/portfolio-editor --skill portfolio-editor --agent codex   # or claude-code, cursor, ...
 ```
 
-Choose your agent when prompted. For a project-local Codex installation, use `--agent codex`. The installer prints the installed directory; the tested Codex location is `.agents/skills/portfolio-editor`. Installation copies the skill resources but does **not** install the helper's npm dependencies or configure a schedule.
+The installer prints the installed directory; the tested Codex location is `.agents/skills/portfolio-editor`. You can also copy this folder into your agent's skills directory (for Claude Code, `.claude/skills/portfolio-editor`).
 
-From the installed directory (adjust this path to the installer's output):
+**Apps that install skills by upload** (Claude.ai, Claude desktop, ChatGPT; unverified): download `portfolio-editor.zip` from the latest GitHub release, or build it with `npm run package` (output in `dist/`), and upload it in the app's skills settings. The zip contains one `portfolio-editor/` folder with SKILL.md, references, examples and scripts; tests and CI files are left out.
+
+Check the installation from the installed directory:
 
 ```sh
-cd .agents/skills/portfolio-editor
-npm ci --ignore-scripts
-npm test
-npm run demo
+node scripts/demo.cjs
 ```
 
-Run these commands in the skill directory, not your portfolio root. The synthetic demo produces a private review without requiring source accounts or a compatible website. It does not start a preview server.
+The synthetic demo produces a private review without requiring source accounts or a compatible website. It does not start a preview server.
 
 ## Your first real review
 
@@ -33,21 +46,22 @@ Start with this prompt in an agent that can read local files and your selected s
 
 Provide your portfolio's absolute path when asked. The agent should check compatibility before collecting evidence. See [first-run guidance](references/first-run.md) and the [sample editorial policy](examples/editorial-policy.example.md). The sample is a starting point to edit, not permission to disclose your work.
 
-## Try it without private data
+## Develop and test
 
-Requires Node.js 22 or later, npm, Git and tar. The test fixture is generated locally; it does not use a personal repository or cloud account.
+Requires Node.js 22 or later, npm, Git and tar. `npm ci` installs only the dev dependency used for the gray-matter parity test.
 
 ```sh
 npm ci
 npm test
 npm run demo
+npm run package
 ```
 
 The demo creates a temporary synthetic repository and private output directory, prints a review report path, and repeats the run to demonstrate duplicate-notification suppression. It does not start a website or publish anything. Delete the printed temporary demo folder when finished.
 
 ## Use with your portfolio
 
-1. Copy this folder to your agent host's supported skill directory, or explicitly provide SKILL.md. Host tools and installation methods differ.
+1. Install the skill as above. Host tools and installation methods differ; the skill reports which mode it can run in.
 2. Copy examples/config.example.json to a private location outside Git. Set absolute repository/state paths and your approved project/source registry. Copy examples/editorial-policy.example.md alongside the private config, edit it, and provide both absolute paths to the agent. The policy is read by the agent; it is not a config field or automatically enforced by the helper.
 3. Ask the agent to read SKILL.md with that configuration path (or set PORTFOLIO_EDITOR_CONFIG and provide it to the agent). It collects fresh evidence using available host tools and creates a private batch matching references/batch.md.
 4. Run `node scripts/pilot.cjs /absolute/config.json /absolute/batch.json`.
@@ -84,7 +98,7 @@ By default, PR-SUMMARY.md is a prepared artifact, not a posted PR. Opt-in [draft
 
 ## Validation
 
-See [installation validation](references/validation.md) for tested environments and the limits of those checks. Installation support does not mean source connectors or scheduling work on every agent host.
+See [installation validation](references/validation.md) for tested environments and the limits of those checks, and [modes](references/modes.md) for per-host notes. Installation support does not mean source connectors or scheduling work on every agent host.
 
 ## Privacy and limitations
 

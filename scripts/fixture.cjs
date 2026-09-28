@@ -24,6 +24,6 @@ Synthetic test content, not a real project or a running website.
 `);
  const git=args=>execFileSync('git',['-C',repo,...args],{stdio:'pipe'});
  git(['init','-q']);git(['add','.']);git(['-c','user.name=Test Fixture','-c','user.email=fixture@example.invalid','-c','commit.gpgsign=false','commit','-qm','Create synthetic fixture']);
- fs.symlinkSync(path.resolve(__dirname,'../node_modules'),path.join(repo,'node_modules'),'dir');return fs.realpathSync(repo);
+ const modules=path.resolve(__dirname,'../node_modules');if(fs.existsSync(modules))fs.symlinkSync(modules,path.join(repo,'node_modules'),'dir');return fs.realpathSync(repo);
 }
 module.exports={fixture};

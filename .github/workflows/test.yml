@@ -17,3 +17,18 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm test
       - run: npm run demo
+      - name: Build upload package
+        run: npm run package
+      - name: Run demo from the unpacked package (no npm install)
+        run: |
+          mkdir -p "$RUNNER_TEMP/pkg"
+          unzip -q dist/portfolio-editor.zip -d "$RUNNER_TEMP/pkg"
+          test ! -e "$RUNNER_TEMP/pkg/portfolio-editor/node_modules"
+          node "$RUNNER_TEMP/pkg/portfolio-editor/scripts/demo.cjs"
+      - name: Validate against the Agent Skills spec
+        run: pipx run --spec skills-ref agentskills validate "$RUNNER_TEMP/pkg/portfolio-editor"
+      - uses: actions/upload-artifact@v4
+        if: matrix.node == 22
+        with:
+          name: portfolio-editor-skill
+          path: dist/portfolio-editor.zip

@@ -2,9 +2,15 @@
 
 Use this guide when the user has no private configuration yet or requests onboarding.
 
+## Onboarding without a shell (Review-only)
+
+Choose the mode before following the filesystem instructions below. In Review-only mode, ask only for missing current portfolio content (uploaded files or pasted text), approved source scope and editorial preferences. Do not require local paths, Git history, environment variables or config files. Accept the policy and source registry as inline structured text; obtain current content before claiming a change is new. Collect accessible evidence and return the mode-specific proposals, private review and public-safe summary described in modes.md. Configuration can be supplied as a draft for later helper use, with unresolved paths clearly marked; do not call it runnable or execute scripts. If a required source or current portfolio content is unavailable, state that limitation and defer dependent claims.
+
+In Helper mode, follow modes.md to create a disclosed throwaway Git snapshot from uploaded content and keep session-private config/state outside it. In Full mode, use the real checkout. The remaining instructions apply to Helper and Full only.
+
 ## Check the installation
 
-Locate this skill's directory from SKILL.md. Check Node.js >=22, npm, Git and tar. From that directory, install dependencies with `npm ci --ignore-scripts`. Run `npm run demo` if the user wants a demonstration without connecting private sources. The printed REVIEW.md is a synthetic example, not an assessment of their work. The fixture is not a running website.
+Locate this skill's directory from SKILL.md and choose a mode with modes.md. For Helper or Full mode check Node.js >=22 and Git (plus tar for previews). No dependency install is needed. Run `npm run demo` (or `node scripts/demo.cjs`) if the user wants a demonstration without connecting private sources. The printed REVIEW.md is a synthetic example, not an assessment of their work. The fixture is not a running website.
 
 ## Check the portfolio before collecting evidence
 

@@ -5,6 +5,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const {execFileSync} = require('node:child_process');
 const {render,sha} = require('./review.cjs');
+const frontmatter = require('./lib/frontmatter.cjs');
 const hash = x => crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
 function check(ok, message) { if (!ok) throw new Error(message); }
 function read(file) { return JSON.parse(fs.readFileSync(file, 'utf8')); }
@@ -16,11 +17,10 @@ function write(file, data) {
 function date(value) { return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0,10) === value; }
 function outside(dir, repo) { return dir !== repo && !dir.startsWith(repo + path.sep); }
 function snapshot(repo) {
-  const matter = require('gray-matter');
   const projects = {};
   for (const filename of fs.readdirSync(path.join(repo, 'content/projects')).filter(f => /\.md$/.test(f))) {
     const raw = fs.readFileSync(path.join(repo,'content/projects',filename),'utf8');
-    const data = matter(raw).data;
+    const data = frontmatter.parse(raw).data;
     check(data.slug === filename.slice(0,-3), 'Project slug mismatch: ' + filename);
     check(date(data.date), 'Invalid project date: ' + filename);
     const ids = new Set();
@@ -109,7 +109,6 @@ function run(configFile, batchFile, now = new Date().toISOString()) {
     report.notify = decisions.some(d=>d.changed && d.decision!=='ignore') || (report.status==='partial' && state.gapSignature!==gapSignature);
     state.gapSignature = gapSignature;
     const runDir = path.join(dir,'runs',runId); fs.mkdirSync(runDir,{recursive:true,mode:0o700});
-    const matter = require('gray-matter');
     const proposedDir = path.join(runDir,'proposed');
     if (report.proposals.length) fs.mkdirSync(proposedDir,{mode:0o700});
     const grouped = new Map();
@@ -122,10 +121,10 @@ function run(configFile, batchFile, now = new Date().toISOString()) {
     report.proposedHashes = {};
     fs.mkdirSync(path.join(runDir,'before'),{mode:0o700});
     for (const [slug, milestones] of grouped) {
-      const parsed = matter(projects[slug].raw);
+      const parsed = frontmatter.parse(projects[slug].raw);
       const proposedData = {...parsed.data, milestones:[...(parsed.data.milestones||[]),...milestones]};
       const target = path.join(proposedDir,slug+'.md');
-      fs.writeFileSync(target,matter.stringify(parsed.content,proposedData),{mode:0o600});
+      fs.writeFileSync(target,frontmatter.stringify(parsed.content,proposedData),{mode:0o600});
       report.proposedFiles.push(target);
       report.proposedHashes[slug] = sha(fs.readFileSync(target));
       fs.writeFileSync(path.join(runDir,'before',slug+'.md'),projects[slug].raw,{mode:0o600});

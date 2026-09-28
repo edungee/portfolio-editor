@@ -7,6 +7,9 @@ const {execFileSync} = require('node:child_process');
 const {sha} = require('./review.cjs');
 const read = p => JSON.parse(fs.readFileSync(p, 'utf8'));
 const check = (ok, message) => { if (!ok) throw new Error(message); };
+// Managed head-branch prefix. Earlier releases used 'codex/portfolio-editor-'; hosts must still recognise it.
+const BRANCH_PREFIX = 'portfolio-editor/';
+const LEGACY_BRANCH_PREFIXES = ['codex/portfolio-editor-'];
 const git = (cwd, ...args) => execFileSync('git', ['-C', cwd, ...args], {encoding:'utf8', stdio:['ignore','pipe','pipe']}).trim();
 function inspect(configPath, reportPath) {
  const config = read(configPath), report = read(reportPath), runDir = fs.realpathSync(path.dirname(reportPath));
@@ -38,7 +41,7 @@ function prepare(configPath, reportPath) {
  const base=config.delivery.baseBranch;
  const live=git(config.repository,'ls-remote',remote,'refs/heads/'+base).split(/\s/)[0];
  check(live===report.baselineCommit, 'Default branch moved; regenerate proposal and preview');
- const branch='codex/portfolio-editor-'+contentId.slice(0,16);
+ const branch=BRANCH_PREFIX+contentId.slice(0,16);
  const checkout=path.join(runDir,'delivery-repo');
  const record=path.join(runDir,'delivery.json');
  if(fs.existsSync(checkout)) {
@@ -84,5 +87,5 @@ function locked(fn,c,r) {
  const fd=fs.openSync(lock,'wx',0o600);fs.writeFileSync(fd,JSON.stringify({pid:process.pid,startedAt:new Date().toISOString()}));
  try{return fn(c,r);}finally{fs.closeSync(fd);fs.unlinkSync(lock);}
 }
-module.exports={inspect,prepare:(c,r)=>locked(prepare,c,r),push:(c,r)=>locked(push,c,r)};
+module.exports={BRANCH_PREFIX,LEGACY_BRANCH_PREFIXES,inspect,prepare:(c,r)=>locked(prepare,c,r),push:(c,r)=>locked(push,c,r)};
 if(require.main===module){try{const [mode,c,r]=process.argv.slice(2);check(['inspect','prepare','push'].includes(mode)&&c&&r,'Usage: delivery.cjs inspect|prepare|push CONFIG REPORT');const result=mode==='inspect'?{contentId:inspect(c,r).contentId}:mode==='prepare'?locked(prepare,c,r):locked(push,c,r);console.log(JSON.stringify(result,null,2));}catch(e){console.error(e.message);process.exitCode=1;}}
