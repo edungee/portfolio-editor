@@ -2,7 +2,7 @@
 
 An agent skill that turns approved work evidence into private portfolio change proposals, readable review summaries and combined site previews.
 
-**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. Only a Markdown project/milestone format is supported today. Cross-platform live integration has not been validated.
+**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. The scripted adapter handles Markdown project milestones; a host-managed editorial workflow covers new projects, speaking, writing and other repository-backed surfaces. Cross-platform live integration has not been validated.
 
 ## Install the skill
 
@@ -53,7 +53,11 @@ The demo creates a temporary synthetic repository and private output directory, 
 4. Run `node scripts/pilot.cjs /absolute/config.json /absolute/batch.json`.
 5. Review REVIEW.md, proposed Markdown and PR-SUMMARY.md in the printed run directory. Private source notes belong only in the private review, never in PR text.
 
-The supported portfolio has committed content/projects/SLUG.md files with title, slug, date and a milestones array. Each milestone has id, date, title, summary, kind, rationale and optional evidence. See the synthetic fixture and batch reference. Proposed changes currently append milestones; arbitrary body rewrites and CMS adapters are not implemented.
+The supported portfolio has committed content/projects/SLUG.md files with title, slug, date and a milestones array. Each milestone has id, date, title, summary, kind, rationale and optional evidence. See the synthetic fixture and batch reference. Proposed changes currently append milestones; other repository-backed edits use the host editorial workflow, not this milestone helper. Generic CMS adapters are not implemented.
+
+For explicitly authorized account-wide discovery, follow [discovery](references/discovery.md). Accessible chats and Notion documents are inventoried incrementally with durable backfill and honest coverage limits. Known sources are seeds, not a ceiling. Reading a source does not grant permission to publish its contents.
+
+For speaking, writing, new projects or a mixed patch, use [whole-portfolio editorial changes](references/editorial-changes.md). The host reviews and validates a combined committed snapshot; the commands below are for milestone-only proposals.
 
 ## Preview all proposed changes
 
@@ -76,7 +80,7 @@ A requested temporary Cloudflare tunnel can provide a shareable URL. Verify it w
 
 Use your host's scheduler to invoke the skill with fresh evidence. examples/schedule.md supplies an instruction template. Configure timezone, missed-run behavior, credentials and machine availability explicitly. Report meaningful new proposals and actionable failures; stay quiet on unchanged runs.
 
-By default, PR-SUMMARY.md is a prepared artifact, not a posted PR. Opt-in [draft PR delivery](references/delivery.md) validates the preview snapshot and pushes only reviewed Markdown. The host creates the draft PR and reports checks. One managed PR stays pending at a time; later candidates remain private until it is reviewed. Merging and deployment are never automatic. Dry runs need no GitHub write access.
+By default, PR-SUMMARY.md is a prepared artifact, not a posted PR. Opt-in [draft PR delivery](references/delivery.md) validates the preview snapshot and pushes only reviewed Markdown. The host creates the draft PR and reports checks. One managed draft PR stays pending at a time; new qualifying changes join that same draft with an updated combined preview and summary, preserving reviewer edits. Merging and deployment are never automatic. Dry runs need no GitHub write access.
 
 ## Validation
 

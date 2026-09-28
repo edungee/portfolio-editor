@@ -4,9 +4,11 @@ The batch helper still generates private proposals. Delivery is a separate opt-i
 
 ## Before collection
 
-Query open PRs in the target repository, including pagination. Recognize only PRs created by this workflow by their `codex/portfolio-editor-` head and `<!-- portfolio-editor -->` body marker. If one is pending, retain it: verify its stored head, recheck its preview, update its description/check status if needed, and keep new candidates private until it is merged or closed. Do not replace reviewer's edits or accumulate competing content PRs. Closed unmerged proposals are rejected, not permission to reopen; remember their claim IDs privately until explicitly reconsidered. Uncertain PR lookup blocks delivery.
+Query open PRs in the target repository, including pagination. Recognize only PRs created by this workflow by their `codex/portfolio-editor-` head and `<!-- portfolio-editor -->` body marker. If one is pending, retain its identity and use editorial-changes.md to incorporate newly included candidates into the same draft. Verify the stored head and preserve reviewer edits; never accumulate competing content PRs. Closed unmerged proposals are rejected, not permission to reopen; remember their claim IDs privately until explicitly reconsidered. Uncertain PR lookup blocks delivery.
 
 Use a clean isolated checkout of the current remote default branch for comparison and proposal generation. Do not reset the user's working checkout. Keep configuration, batches and state outside Git. Generate an effective private config pointing `repository` to this fresh baseline while preserving the source registry and stateDirectory. Install the portfolio dependencies in the isolated checkout, or reuse an existing installation only when dependency manifests match. The registered Git source paths are not permission to pull/reset those source repositories.
+
+For a mixed patch, non-milestone change, or additions to a pending PR, use editorial-changes.md for the entire package. The commands below apply only to a fresh milestone-only proposal.
 
 ## Prepare and validate
 

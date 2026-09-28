@@ -18,3 +18,7 @@ The `--agent codex` install target was exercised, not an autonomous first-use co
 ## Reproduce
 
 In a disposable project, run the README install command with `--agent codex`, then run the dependency setup, tests and demo inside the directory printed by the installer. Read the generated REVIEW.md and proposed Markdown. For an unreleased change, use a local checkout path as the install source instead of the GitHub shorthand. Source credentials and private configuration are unnecessary for this synthetic check.
+
+## Whole-portfolio host workflow — 28 September 2026
+
+The installed pilot and public skill now document opt-in discovery across accessible chats and Notion, durable inventory/backfill state, and a host-managed path for mixed portfolio changes. A real combined snapshot containing an existing project milestone and a recurring-series Speaking addition passed a production build, lint and type checks. Existing 20 helper tests passed and both skill entrypoints passed frontmatter validation. These tests cover the unchanged milestone helpers, not an automated account crawler. Full account-wide inventory/backfill and a fully unattended mixed delivery have not yet been validated. The host workflow requires available discovery, Git, preview and PR tools; it does not claim universal CMS support.

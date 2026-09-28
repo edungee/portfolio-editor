@@ -1,7 +1,9 @@
 # Review package and preview
 Every run writes REVIEW.md (private explanation and before/after wording) and PR-SUMMARY.md (only cleared public wording). Proposed Markdown and baseline versions live alongside the run report. Do not copy private source notes or the whole review into a public PR.
 
-For a meaningful proposal, prepare one combined site snapshot:
+For mixed or non-milestone changes follow editorial-changes.md for one combined snapshot, review and public summary. The milestone helper does not cover those surfaces.
+
+For a milestone-only proposal, prepare one combined site snapshot:
 `node scripts/preview.cjs prepare CONFIG REPORT`
 It pins the baseline commit, rejects tracked local edits or changed proposals, archives committed site files into the private run's site-preview directory and overlays all accepted project changes. Private batch inputs, reports and state are outside the server root. node_modules is shared; .next is isolated. Do not build in an active preview directory.
 
