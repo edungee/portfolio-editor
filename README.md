@@ -2,7 +2,7 @@
 
 An agent skill that turns approved work evidence into private portfolio change proposals, readable review summaries and combined site previews.
 
-**Status: experimental, private-dry-run release candidate.** Automatic PR delivery is not implemented. The helpers do not crawl accounts or schedule themselves. Only a Markdown project/milestone format is supported today. Cross-platform live integration has not been validated.
+**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. Only a Markdown project/milestone format is supported today. Cross-platform live integration has not been validated.
 
 ## Install the skill
 
@@ -76,7 +76,7 @@ A requested temporary Cloudflare tunnel can provide a shareable URL. Verify it w
 
 Use your host's scheduler to invoke the skill with fresh evidence. examples/schedule.md supplies an instruction template. Configure timezone, missed-run behavior, credentials and machine availability explicitly. Report meaningful new proposals and actionable failures; stay quiet on unchanged runs.
 
-PR-SUMMARY.md is a prepared artifact, not a posted PR. Planned delivery: create/update one draft PR from the exact reviewed snapshot, verify checks, then notify with PR and preview links. No GitHub write credentials are needed for this release.
+By default, PR-SUMMARY.md is a prepared artifact, not a posted PR. Opt-in [draft PR delivery](references/delivery.md) validates the preview snapshot and pushes only reviewed Markdown. The host creates the draft PR and reports checks. One managed PR stays pending at a time; later candidates remain private until it is reviewed. Merging and deployment are never automatic. Dry runs need no GitHub write access.
 
 ## Validation
 

@@ -13,7 +13,7 @@ Checked 25 September 2026 with skills CLI 1.7.0.
 
 ## Not established by these checks
 
-The `--agent codex` install target was exercised, not an autonomous first-use conversation on every agent. Claude Code, Cursor, Windows and other hosts have not been validated. The synthetic demo does not test live connectors, real editorial judgments, unattended schedules or a running website. Preview snapshot and URL safeguards have helper tests; each real site's preview still needs its own verification. Automatic PR delivery is not implemented.
+The `--agent codex` install target was exercised, not an autonomous first-use conversation on every agent. Claude Code, Cursor, Windows and other hosts have not been validated. The synthetic demo does not test live connectors, real editorial judgments, unattended schedules or a running website. Preview snapshot and URL safeguards have helper tests; each real site's preview still needs its own verification. Draft PR delivery requires host integration; see delivery.md. Local Git tests exercise disabled mode, modified proposals, stale previews, moved base branches, exact file scope, retries and remote-edit refusal.
 
 ## Reproduce
 

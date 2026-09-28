@@ -15,4 +15,4 @@ Notification: summarize proposed additions by project and why they matter, link 
 
 A verified preview is evidence of HTTP availability and snapshot identity, not a successful production build or a permanent guarantee. Recheck immediately before sending. Changing proposals requires a fresh prepared snapshot and verification. Stop only processes owned by that preview when retiring it; never stop unrelated dev servers.
 
-PR mode remains unimplemented. When added, generate the PR from these exact proposed file hashes and baseline, and invalidate approval if they change. Public previews contain only publication-cleared content; private evidence remains in the separate review report.
+For explicitly enabled draft PR delivery, follow references/delivery.md. Generate the PR from these exact proposed file hashes and baseline; regenerate review and preview if they change. Public previews contain only publication-cleared content; private evidence remains in the separate review report.
