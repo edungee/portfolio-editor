@@ -2,7 +2,7 @@
 const test=require('node:test'), assert=require('node:assert/strict'), fs=require('node:fs'), os=require('node:os'), path=require('node:path');
 const {execFileSync}=require('node:child_process');
 const {sha}=require('../scripts/review.cjs');
-const {inspect,prepare,push}=require('../scripts/delivery.cjs');
+const {inspect,prepare,push,BRANCH_PREFIX,LEGACY_BRANCH_PREFIXES}=require('../scripts/delivery.cjs');
 function setup(t){
  const root=fs.mkdtempSync(path.join(os.tmpdir(),'delivery-test-'));
  const git=(cwd,...a)=>execFileSync('git',['-C',cwd,...a],{encoding:'utf8',stdio:'pipe'}).trim();
@@ -32,4 +32,9 @@ test('delivery rejects a default branch that moved after review',t=>{
 test('delivery pushes only reviewed files, resumes idempotently and refuses remote edits',t=>{
  const x=setup(t);fs.writeFileSync(path.join(x.run,'secret.txt'),'PRIVATE');const d=push(x.c,x.r);assert.equal(push(x.c,x.r).commit,d.commit);assert.equal(x.git(d.checkout,'diff','--name-only',d.baseline,'HEAD'),'content/projects/sample.md');assert.equal(x.git(x.repo,'status','--porcelain'),'');
  fs.writeFileSync(path.join(x.repo,'outsider.txt'),'outside');x.git(x.repo,'add','.');x.git(x.repo,'commit','-m','Someone else');x.git(x.repo,'push',x.remote,'HEAD:refs/heads/'+d.branch,'--force');assert.throws(()=>push(x.c,x.r),/Remote branch changed/);
+});
+test('delivery uses a host-neutral branch and resumes a legacy-named preparation',t=>{
+ const x=setup(t);const d=prepare(x.c,x.r);assert.ok(d.branch.startsWith(BRANCH_PREFIX));assert.doesNotMatch(d.branch,/codex/);assert.deepEqual(LEGACY_BRANCH_PREFIXES,['codex/portfolio-editor-']);
+ const record=path.join(x.run,'delivery.json');const legacy={...JSON.parse(fs.readFileSync(record,'utf8')),branch:'codex/portfolio-editor-'+d.contentId.slice(0,16)};fs.writeFileSync(record,JSON.stringify(legacy));
+ assert.equal(push(x.c,x.r).branch,legacy.branch);assert.equal(x.git(x.repo,'ls-remote',x.remote,'refs/heads/'+legacy.branch).split(/\s/)[0],d.commit);
 });

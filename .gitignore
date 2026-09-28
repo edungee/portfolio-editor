@@ -6,3 +6,4 @@ runs/
 site-preview/
 *.log
 .DS_Store
+dist/
