@@ -2,7 +2,7 @@
 
 An agent skill that turns approved work evidence into private portfolio change proposals, readable review summaries and combined site previews.
 
-**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. The scripted adapter handles Markdown project milestones; a host-managed editorial workflow covers new projects, speaking, writing and other repository-backed surfaces. Only the Codex install path has been validated end to end; other hosts are documented but unverified (see [validation](references/validation.md)).
+**Status: experimental, private-dry-run release candidate.** Draft PR delivery is opt-in and requires host GitHub tools plus Git SSH access. The helpers do not crawl accounts or schedule themselves. The scripted adapter handles Markdown project milestones; a host-managed editorial workflow covers new projects, speaking, writing and other repository-backed surfaces. The Codex install target and synthetic demo have been tested; full first-use walkthroughs on other hosts still need validation (see [validation](references/validation.md)).
 
 ## What works where
 
@@ -16,27 +16,34 @@ The skill checks what the current agent can do and picks a mode ([details](refer
 
 Coding agents (Codex, Claude Code, Cursor) usually run in Full mode. Chat apps (Claude.ai, ChatGPT) usually run in Helper or Review-only mode. No mode merges, deploys or emails anything.
 
-## Install the skill
+## Choose your destination
 
-The helpers have **no npm dependencies** (the YAML parser is bundled), so there is no install step beyond copying the skill.
+Choose the app where you want to run Portfolio Editor. Each guide covers installation, checking that the skill is available, connecting your portfolio and evidence, and completing a first private review.
 
-**Coding agents with the skills CLI** (Codex was tested; others unverified):
+- **[Codex](references/setup/codex.md)** — local portfolio checkout, preview and optional draft PR. The install target and synthetic demo have been tested.
+- **[Claude Code](references/setup/claude-code.md)** — local setup using Claude Code's skill directory. Host walkthrough awaiting validation.
+- **[Cursor](references/setup/cursor.md)** — local setup in your portfolio workspace. Host walkthrough awaiting validation.
+- **[ZIP uploads and chat apps](references/setup/uploads.md)** — Claude upload instructions and a file-based fallback for other hosts; capabilities depend on the app. Host walkthrough awaiting validation.
+
+Start with one destination and one approved evidence source. Installation does not connect your accounts or enable a schedule. The guides link to official host documentation; that is separate from testing this skill on each host. See [what has been validated](references/validation.md).
+
+### Get the skill files
+
+The helpers have no runtime npm dependencies: the YAML parser is bundled. For the published default branch, the tested Codex installer command is:
 
 ```sh
-npx skills add edungee/portfolio-editor --skill portfolio-editor --agent codex   # or claude-code, cursor, ...
+npx skills add edungee/portfolio-editor --skill portfolio-editor --agent codex
 ```
 
-The installer prints the installed directory; the tested Codex location is `.agents/skills/portfolio-editor`. You can also copy this folder into your agent's skills directory (for Claude Code, `.claude/skills/portfolio-editor`).
-
-**Apps that install skills by upload** (Claude.ai, Claude desktop, ChatGPT; unverified): download `portfolio-editor.zip` from the latest GitHub release, or build it with `npm run package` (output in `dist/`), and upload it in the app's skills settings. The zip contains one `portfolio-editor/` folder with SKILL.md, references, examples and scripts; tests and CI files are left out.
-
-Check the installation from the installed directory:
+**Testing the portability changes before they are merged:** use the `portability` checkout, not the default-branch installer above. In a terminal, from a folder outside your portfolio repository:
 
 ```sh
-node scripts/demo.cjs
+git clone --branch portability https://github.com/edungee/portfolio-editor.git portfolio-editor-portability
+cd portfolio-editor-portability
+node scripts/package.cjs
 ```
 
-The synthetic demo produces a private review without requiring source accounts or a compatible website. It does not start a preview server.
+This requires Git and Node.js 22+. Extract `dist/portfolio-editor.zip`; it contains one `portfolio-editor/` folder. Follow your destination guide to install that folder or upload the ZIP. Keep the source checkout outside the destination skill folder. A GitHub source-code ZIP is not the generated skill ZIP. When a release publishes a skill ZIP, you can use that asset instead of building it.
 
 ## Your first real review
 
