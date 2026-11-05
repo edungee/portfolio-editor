@@ -1,12 +1,39 @@
 ---
 name: portfolio-editor
-description: Review approved work sources (Git history, Notion, chats) for meaningful portfolio developments, verify evidence, and prepare private change proposals, review summaries and combined site previews, optionally as one draft PR. Use when the user asks to update their portfolio, find what has changed in their work since the last review, add project milestones or case-study updates, or set up a recurring portfolio review. Scripted edits cover Markdown project milestones (content/projects/*.md) with Next.js-style previews; other repository-backed surfaces use a host-managed workflow. Not a generic CMS adapter.
+description: Turn approved work evidence into private portfolio update proposals and review summaries. Use when reviewing recent work, updating project milestones or case studies, or preparing a recurring portfolio review.
 license: Apache-2.0
 compatibility: Full workflow needs a shell, Node.js 22+, Git and a local checkout of the portfolio repository; draft PRs also need GitHub access. No npm install required. Hosts without these run in helper or review-only mode (see references/modes.md).
 metadata:
   version: "0.2.0"
 ---
-# Portfolio editor
+# Portfolio Editor
+
+An agent skill that turns approved work evidence into private portfolio change proposals, readable review summaries and combined site previews.
+
+Compare fresh evidence from approved sources, such as Git history, Notion and chats, with current portfolio content and prior editorial decisions. Identify meaningful developments, explain what merits an update, and keep source evidence private.
+
+## What you get
+
+- Proposed updates to project milestones, case studies, speaking, writing and other repository-backed portfolio content.
+- A private `REVIEW.md` explaining the evidence, decisions, access gaps and validation limits, plus a public-safe `PR-SUMMARY.md` for supported proposals.
+- A combined site preview when the host and portfolio support it, with optional draft PR delivery when explicitly authorized.
+
+The skill adapts to the available tools: Full mode supports the repository workflow and previews; Helper mode generates proposed files and reports; Review-only mode produces proposals without applying changes. The scripted adapter handles Markdown project milestones; other surfaces use the host's editorial workflow. See [operating modes](references/modes.md) for requirements and [validation](references/validation.md) for tested environments.
+
+Start with a private review. Scheduling and draft PR delivery require explicit setup; merging and deployment are never automatic. See the [README](README.md) for installation and a first-review prompt.
+
+## Choose your destination
+
+Choose the app where you want to run Portfolio Editor. Each guide covers installation, checking that the skill is available, connecting your portfolio and evidence, and completing a first private review.
+
+- **[Codex](references/setup/codex.md)** — local portfolio checkout, preview and optional draft PR. The install target and synthetic demo have been tested.
+- **[Claude Code](references/setup/claude-code.md)** — local setup using Claude Code's skill directory. Host walkthrough awaiting validation.
+- **[Cursor](references/setup/cursor.md)** — local setup in your portfolio workspace. Host walkthrough awaiting validation.
+- **[ZIP uploads and chat apps](references/setup/uploads.md)** — Claude upload instructions and a file-based fallback for other hosts; capabilities depend on the app. Host walkthrough awaiting validation.
+
+Start with one destination and one approved evidence source. Installation does not connect your accounts or enable a schedule. The guides link to official host documentation; that is separate from testing this skill on each host. See [what has been validated](references/validation.md).
+
+## Agent workflow
 
 Resolve every bundled file relative to this SKILL.md, not the portfolio working directory.
 
